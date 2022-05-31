@@ -2,6 +2,7 @@ mod error;
 mod tests;
 
 use error::ParseError;
+use helpers::{decrement_char, increment_char};
 use lazy_static::lazy_static;
 use regex::Regex;
 use std::{fmt, result};
@@ -77,11 +78,56 @@ impl LexValue {
     }
 
     pub fn next(&self) -> Self {
-        todo!()
+        for (i, c) in self.0.chars().rev().enumerate() {
+            let i = self.0.len() - i - 1;
+
+            if c == 'z' {
+                continue;
+            };
+
+            let next_c = increment_char(&c).expect(&format!("failed to increment char '{}'", c));
+            let new_value = self.0.substring(0, i).to_owned() + &next_c.to_string();
+            return LexValue(new_value);
+        }
+
+        let new_value = self.0.to_owned() + "1";
+        return LexValue(new_value);
     }
 
     pub fn prev(&self) -> Self {
-        todo!()
+        let length = self.0.len();
+        let c = self.0.chars().rev().nth(0).unwrap();
+
+        if c != '1' {
+            let new_value = self.0.substring(0, length - 1).to_owned()
+                + &decrement_char(&c)
+                    .expect(&format!("failed to decrement char '{}'", c))
+                    .to_string();
+
+            return LexValue(new_value);
+        }
+
+        for (i, c) in self.0.chars().rev().enumerate() {
+            // Skip last char which is '1'
+            if i == 0 {
+                continue;
+            }
+
+            // Use correct string index
+            let i = self.0.len() - i - 1;
+
+            // Must have non-zero leading chars in order to truncate
+            if c == '0' {
+                continue;
+            };
+
+            let new_value = self.0.substring(0, i + 1).to_owned();
+            return LexValue(new_value);
+        }
+
+        // Can't decrement char or truncate so slap a 0 on the front
+        let new_value = "0".to_owned() + &self.0;
+        return LexValue(new_value);
     }
 }
 
@@ -128,6 +174,14 @@ impl LexoRank {
     pub fn rank(&self) -> &LexValue {
         &self.rank
     }
+
+    pub fn next(&self) -> Self {
+        LexoRank::new(self.bucket, self.rank.next())
+    }
+
+    pub fn prev(&self) -> Self {
+        LexoRank::new(self.bucket, self.rank.prev())
+    }
 }
 
 impl TryFrom<&str> for LexoRank {
@@ -141,5 +195,27 @@ impl TryFrom<&str> for LexoRank {
 impl fmt::Display for LexoRank {
     fn fmt(&self, f: &mut fmt::Formatter) -> std::result::Result<(), fmt::Error> {
         write!(f, "{}|{}", self.bucket.value(), self.rank.value())
+    }
+}
+
+mod helpers {
+    pub fn increment_char(c: &char) -> Option<char> {
+        if c == &'z' {
+            None
+        } else if c == &'9' {
+            Some('a')
+        } else {
+            Some(char::from_u32(*c as u32 + 1).unwrap())
+        }
+    }
+
+    pub fn decrement_char(c: &char) -> Option<char> {
+        if c == &'0' {
+            None
+        } else if c == &'a' {
+            Some('9')
+        } else {
+            Some(char::from_u32(*c as u32 - 1).unwrap())
+        }
     }
 }

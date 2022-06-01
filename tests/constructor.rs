@@ -2,15 +2,16 @@ use lexorank::{Bucket, LexoRank, Rank};
 
 #[test]
 fn create() {
-    let lex_tuples = [(0, "2a"), (1, "01"), (2, "abc")];
+    let lex_tuples = [(0, "2a", "0|2a"), (1, "01", "1|01"), (2, "abc", "2|abc")];
 
-    for (bucket, value) in lex_tuples {
+    for (bucket, value, lex_string) in lex_tuples {
         let lex_bucket = Bucket::new(bucket).unwrap();
         let lex_value = Rank::new(value).unwrap();
         let lexorank = LexoRank::new(lex_bucket, lex_value);
 
         assert_eq!(*lexorank.bucket(), Bucket::new(bucket).unwrap());
         assert_eq!(*lexorank.rank(), Rank::new(value).unwrap());
+        assert_eq!(lexorank.to_string(), lex_string);
     }
 }
 
@@ -52,6 +53,7 @@ fn create_from_string() {
 
         assert_eq!(*lexorank.bucket(), Bucket::new(bucket).unwrap());
         assert_eq!(*lexorank.rank(), Rank::new(value).unwrap());
+        assert_eq!(lexorank.to_string(), lex_string);
     }
 }
 

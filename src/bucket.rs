@@ -1,9 +1,9 @@
 use super::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-pub struct LexBucket(u8);
+pub struct Bucket(u8);
 
-impl LexBucket {
+impl Bucket {
     pub fn new(value: u8) -> ParseResult<Self> {
         if value > 2 {
             Err(ParseError(format!(
@@ -11,7 +11,7 @@ impl LexBucket {
                 value
             )))
         } else {
-            Ok(LexBucket(value))
+            Ok(Bucket(value))
         }
     }
 
@@ -21,25 +21,25 @@ impl LexBucket {
 
     pub fn next(&self) -> Self {
         if self.0 == 2 {
-            LexBucket(0)
+            Bucket(0)
         } else {
-            LexBucket(self.0 + 1)
+            Bucket(self.0 + 1)
         }
     }
 
     pub fn prev(&self) -> Self {
         if self.0 == 0 {
-            LexBucket(2)
+            Bucket(2)
         } else {
-            LexBucket(self.0 - 1)
+            Bucket(self.0 - 1)
         }
     }
 }
 
-impl TryFrom<u8> for LexBucket {
+impl TryFrom<u8> for Bucket {
     type Error = ParseError;
 
     fn try_from(value: u8) -> ParseResult<Self> {
-        LexBucket::new(value)
+        Bucket::new(value)
     }
 }

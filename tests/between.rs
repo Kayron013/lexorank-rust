@@ -1,4 +1,4 @@
-use lexorank::{LexValue, LexoRank};
+use lexorank::{LexoRank, Rank};
 
 #[test]
 fn between_ranks() {
@@ -20,9 +20,9 @@ fn between_ranks() {
 
     for (rank1, rank2, between) in test_cases {
         println!("{} -> {} <- {}", rank1, between, rank2);
-        let rank1 = LexValue::new(rank1).unwrap();
-        let rank2 = LexValue::new(rank2).unwrap();
-        let between = LexValue::new(between).unwrap();
+        let rank1 = Rank::new(rank1).unwrap();
+        let rank2 = Rank::new(rank2).unwrap();
+        let between = Rank::new(between).unwrap();
         assert_eq!(rank1.between(&rank2).unwrap(), between);
         assert_eq!(rank2.between(&rank1).unwrap(), between);
     }
@@ -34,8 +34,8 @@ fn between_equal_ranks() {
 
     for rank in test_cases {
         println!("{} -> {} <- {}", rank, rank, rank);
-        let rank1 = LexValue::new(rank).unwrap();
-        let rank2 = LexValue::new(rank).unwrap();
+        let rank1 = Rank::new(rank).unwrap();
+        let rank2 = Rank::new(rank).unwrap();
         assert_eq!(rank1.between(&rank2), None);
         assert_eq!(rank2.between(&rank1), None);
     }

@@ -1,16 +1,16 @@
-use lexorank::{LexBucket, LexValue, LexoRank};
+use lexorank::{Bucket, LexoRank, Rank};
 
 #[test]
 fn compare_equal_buckets() {
-    let bucket1 = LexBucket::new(0).unwrap();
-    let bucket2 = LexBucket::new(0).unwrap();
+    let bucket1 = Bucket::new(0).unwrap();
+    let bucket2 = Bucket::new(0).unwrap();
     assert_eq!(bucket1, bucket2);
 }
 
 #[test]
 fn compare_unequal_buckets() {
-    let bucket1 = LexBucket::new(0).unwrap();
-    let bucket2 = LexBucket::new(1).unwrap();
+    let bucket1 = Bucket::new(0).unwrap();
+    let bucket2 = Bucket::new(1).unwrap();
     assert_ne!(bucket1, bucket2);
     assert!(
         bucket1 < bucket2,
@@ -28,15 +28,15 @@ fn compare_unequal_buckets() {
 
 #[test]
 fn compare_equal_ranks() {
-    let rank1 = LexValue::new("01").unwrap();
-    let rank2 = LexValue::new("01").unwrap();
+    let rank1 = Rank::new("01").unwrap();
+    let rank2 = Rank::new("01").unwrap();
     assert_eq!(rank1, rank2);
 }
 
 #[test]
 fn compare_unequal_ranks() {
-    let rank1 = LexValue::new("01").unwrap();
-    let rank2 = LexValue::new("02").unwrap();
+    let rank1 = Rank::new("01").unwrap();
+    let rank2 = Rank::new("02").unwrap();
     assert_ne!(rank1, rank2);
     assert!(rank1 < rank2, "{:?} was not less than {:?}", rank1, rank2);
     assert!(
@@ -62,8 +62,8 @@ fn compare_unequal_ranks_2() {
     ];
 
     for (r1, r2) in rank_pairs {
-        let rank1 = LexValue::new(r1).unwrap();
-        let rank2 = LexValue::new(r2).unwrap();
+        let rank1 = Rank::new(r1).unwrap();
+        let rank2 = Rank::new(r2).unwrap();
         assert_ne!(rank1, rank2);
         assert!(rank1 < rank2, "{:?} was not less than {:?}", rank1, rank2);
         assert!(

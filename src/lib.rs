@@ -1,11 +1,11 @@
 mod bucket;
-mod error;
+pub mod error;
 mod lexorank;
-mod value;
+mod rank;
 
 pub use crate::lexorank::LexoRank;
-pub use bucket::LexBucket;
+pub use bucket::Bucket;
 use error::ParseError;
-pub use value::LexValue;
+pub use rank::Rank;
 
 type ParseResult<T> = std::result::Result<T, ParseError>;

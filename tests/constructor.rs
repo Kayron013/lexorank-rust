@@ -1,16 +1,16 @@
-use lexorank::{LexBucket, LexValue, LexoRank};
+use lexorank::{Bucket, LexoRank, Rank};
 
 #[test]
 fn create() {
     let lex_tuples = [(0, "2a"), (1, "01"), (2, "abc")];
 
     for (bucket, value) in lex_tuples {
-        let lex_bucket = LexBucket::new(bucket).unwrap();
-        let lex_value = LexValue::new(value).unwrap();
+        let lex_bucket = Bucket::new(bucket).unwrap();
+        let lex_value = Rank::new(value).unwrap();
         let lexorank = LexoRank::new(lex_bucket, lex_value);
 
-        assert_eq!(*lexorank.bucket(), LexBucket::new(bucket).unwrap());
-        assert_eq!(*lexorank.rank(), LexValue::new(value).unwrap());
+        assert_eq!(*lexorank.bucket(), Bucket::new(bucket).unwrap());
+        assert_eq!(*lexorank.rank(), Rank::new(value).unwrap());
     }
 }
 
@@ -20,11 +20,11 @@ fn create_with_invalid_bucket() {
     let buckets = [3, 4, 10, 100];
 
     for bucket in buckets {
-        let bucket = LexBucket::new(bucket);
+        let bucket = Bucket::new(bucket);
         assert!(bucket.is_err());
     }
 
-    LexBucket::new(4).unwrap();
+    Bucket::new(4).unwrap();
 }
 
 #[test]
@@ -35,11 +35,11 @@ fn create_with_invalid_rank() {
     let values = ["a90", "0", "12B", "C"];
 
     for value in values {
-        let value = LexValue::new(value);
+        let value = Rank::new(value);
         assert!(value.is_err());
     }
 
-    LexValue::new("a0").unwrap();
+    Rank::new("a0").unwrap();
 }
 
 #[test]
@@ -50,8 +50,8 @@ fn create_from_string() {
         let lex_string = format!("{}|{}", bucket, value);
         let lexorank = LexoRank::from_string(&lex_string).unwrap();
 
-        assert_eq!(*lexorank.bucket(), LexBucket::new(bucket).unwrap());
-        assert_eq!(*lexorank.rank(), LexValue::new(value).unwrap());
+        assert_eq!(*lexorank.bucket(), Bucket::new(bucket).unwrap());
+        assert_eq!(*lexorank.rank(), Rank::new(value).unwrap());
     }
 }
 

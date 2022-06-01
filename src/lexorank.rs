@@ -3,28 +3,28 @@ use std::fmt;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LexoRank {
-    bucket: LexBucket,
-    rank: LexValue,
+    bucket: Bucket,
+    rank: Rank,
 }
 
 impl LexoRank {
-    pub fn new(bucket: LexBucket, rank: LexValue) -> Self {
+    pub fn new(bucket: Bucket, rank: Rank) -> Self {
         LexoRank { bucket, rank }
     }
 
     pub fn from_string(value: &str) -> ParseResult<Self> {
         let parts = value.split('|').collect::<Vec<&str>>();
-        let bucket = LexBucket::new(parts[0].parse::<u8>()?)?;
-        let rank = LexValue::new(parts[1])?;
+        let bucket = Bucket::new(parts[0].parse::<u8>()?)?;
+        let rank = Rank::new(parts[1])?;
 
         Ok(LexoRank::new(bucket, rank))
     }
 
-    pub fn bucket(&self) -> &LexBucket {
+    pub fn bucket(&self) -> &Bucket {
         &self.bucket
     }
 
-    pub fn rank(&self) -> &LexValue {
+    pub fn rank(&self) -> &Rank {
         &self.rank
     }
 

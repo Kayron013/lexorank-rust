@@ -6,9 +6,9 @@ use regex::Regex;
 use substring::Substring;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub struct LexValue(String);
+pub struct Rank(String);
 
-impl LexValue {
+impl Rank {
     pub fn new(value: &str) -> ParseResult<Self> {
         lazy_static! {
             static ref RE: Regex = Regex::new(r"^[0-9a-z]*[1-9a-z]$").unwrap();
@@ -20,7 +20,7 @@ impl LexValue {
                 value,
             )))
         } else {
-            Ok(LexValue(value.to_owned()))
+            Ok(Rank(value.to_owned()))
         }
     }
 
@@ -38,11 +38,11 @@ impl LexValue {
 
             let next_c = increment_char(&c).expect(&format!("failed to increment char '{}'", c));
             let new_value = self.0.substring(0, i).to_owned() + &next_c.to_string();
-            return LexValue(new_value);
+            return Rank(new_value);
         }
 
         let new_value = self.0.to_owned() + "1";
-        return LexValue(new_value);
+        return Rank(new_value);
     }
 
     pub fn prev(&self) -> Self {
@@ -55,7 +55,7 @@ impl LexValue {
                     .expect(&format!("failed to decrement char '{}'", c))
                     .to_string();
 
-            return LexValue(new_value);
+            return Rank(new_value);
         }
 
         for (i, c) in self.0.chars().rev().enumerate() {
@@ -73,12 +73,12 @@ impl LexValue {
             };
 
             let new_value = self.0.substring(0, i + 1).to_owned();
-            return LexValue(new_value);
+            return Rank(new_value);
         }
 
         // Can't decrement char or truncate so slap a 0 on the front
         let new_value = "0".to_owned() + &self.0;
-        return LexValue(new_value);
+        return Rank(new_value);
     }
 
     pub fn between(&self, rank2: &Self) -> Option<Self> {
@@ -114,15 +114,15 @@ impl LexValue {
     }
 
     fn append(&self, value: &str) -> Self {
-        LexValue(self.0.to_owned() + value)
+        Rank(self.0.to_owned() + value)
     }
 }
 
-impl TryFrom<&str> for LexValue {
+impl TryFrom<&str> for Rank {
     type Error = ParseError;
 
     fn try_from(value: &str) -> ParseResult<Self> {
-        LexValue::new(value)
+        Rank::new(value)
     }
 }
 

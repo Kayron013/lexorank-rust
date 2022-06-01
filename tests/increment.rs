@@ -1,4 +1,4 @@
-use lexorank::{LexBucket, LexValue, LexoRank};
+use lexorank::{Bucket, LexoRank, Rank};
 
 #[test]
 fn increment_bucket() {
@@ -6,8 +6,8 @@ fn increment_bucket() {
 
     for (before, after) in bucket_pairs {
         println!("{} -> {}", before, after);
-        let before_bucket = LexBucket::new(before).unwrap();
-        let after_bucket = LexBucket::new(after).unwrap();
+        let before_bucket = Bucket::new(before).unwrap();
+        let after_bucket = Bucket::new(after).unwrap();
         assert_eq!(before_bucket.next(), after_bucket);
     }
 }
@@ -18,8 +18,8 @@ fn decrement_bucket() {
 
     for (before, after) in bucket_pairs {
         println!("{} -> {}", before, after);
-        let before_bucket = LexBucket::new(before).unwrap();
-        let after_bucket = LexBucket::new(after).unwrap();
+        let before_bucket = Bucket::new(before).unwrap();
+        let after_bucket = Bucket::new(after).unwrap();
         assert_eq!(before_bucket.prev(), after_bucket);
     }
 }
@@ -44,8 +44,8 @@ fn increment_rank() {
 
     for (before, after) in test_cases {
         println!("{} -> {}", before, after);
-        let before_rank = LexValue::new(before).unwrap();
-        let after_rank = LexValue::new(after).unwrap();
+        let before_rank = Rank::new(before).unwrap();
+        let after_rank = Rank::new(after).unwrap();
         assert_eq!(before_rank.next(), after_rank);
     }
 }
@@ -70,8 +70,8 @@ fn decrement_rank() {
 
     for (before, after) in test_cases {
         println!("{} -> {}", before, after);
-        let before_rank = LexValue::new(before).unwrap();
-        let after_rank = LexValue::new(after).unwrap();
+        let before_rank = Rank::new(before).unwrap();
+        let after_rank = Rank::new(after).unwrap();
         assert_eq!(before_rank.prev(), after_rank);
     }
 }

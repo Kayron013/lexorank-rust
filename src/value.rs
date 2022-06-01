@@ -9,7 +9,7 @@ use substring::Substring;
 pub struct LexValue(String);
 
 impl LexValue {
-    pub fn new(value: &str) -> Result<Self> {
+    pub fn new(value: &str) -> ParseResult<Self> {
         lazy_static! {
             static ref RE: Regex = Regex::new(r"^[0-9a-z]*[1-9a-z]$").unwrap();
         }
@@ -121,7 +121,7 @@ impl LexValue {
 impl TryFrom<&str> for LexValue {
     type Error = ParseError;
 
-    fn try_from(value: &str) -> Result<Self> {
+    fn try_from(value: &str) -> ParseResult<Self> {
         LexValue::new(value)
     }
 }

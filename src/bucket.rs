@@ -4,7 +4,7 @@ use super::*;
 pub struct LexBucket(u8);
 
 impl LexBucket {
-    pub fn new(value: u8) -> Result<Self> {
+    pub fn new(value: u8) -> ParseResult<Self> {
         if value > 2 {
             Err(ParseError(format!(
                 "LexoRank bucket value must be between 0 and 2 inclusive. Found: {}",
@@ -39,7 +39,7 @@ impl LexBucket {
 impl TryFrom<u8> for LexBucket {
     type Error = ParseError;
 
-    fn try_from(value: u8) -> Result<Self> {
+    fn try_from(value: u8) -> ParseResult<Self> {
         LexBucket::new(value)
     }
 }

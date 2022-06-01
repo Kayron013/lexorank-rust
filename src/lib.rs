@@ -3,9 +3,9 @@ mod error;
 mod lexorank;
 mod value;
 
+pub use crate::lexorank::LexoRank;
 pub use bucket::LexBucket;
 use error::ParseError;
-pub use lexorank::LexoRank;
 pub use value::LexValue;
 
-type Result<T> = std::result::Result<T, ParseError>;
+type ParseResult<T> = std::result::Result<T, ParseError>;

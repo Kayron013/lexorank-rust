@@ -12,7 +12,7 @@ impl LexoRank {
         LexoRank { bucket, rank }
     }
 
-    pub fn from_string(value: &str) -> Result<Self> {
+    pub fn from_string(value: &str) -> ParseResult<Self> {
         let parts = value.split('|').collect::<Vec<&str>>();
         let bucket = LexBucket::new(parts[0].parse::<u8>()?)?;
         let rank = LexValue::new(parts[1])?;
@@ -46,7 +46,7 @@ impl LexoRank {
 impl TryFrom<&str> for LexoRank {
     type Error = ParseError;
 
-    fn try_from(value: &str) -> Result<Self> {
+    fn try_from(value: &str) -> ParseResult<Self> {
         LexoRank::from_string(value)
     }
 }

@@ -211,7 +211,7 @@ mod increment {
 
     #[test]
     fn increment_rank() {
-        let rank_pairs = [
+        let test_cases = [
             ("1", "2"),
             ("8", "9"),
             ("9", "a"),
@@ -227,7 +227,7 @@ mod increment {
             ("zzz", "zzz1"),
         ];
 
-        for (before, after) in rank_pairs {
+        for (before, after) in test_cases {
             println!("{} -> {}", before, after);
             let before_rank = LexValue::new(before).unwrap();
             let after_rank = LexValue::new(after).unwrap();
@@ -237,7 +237,7 @@ mod increment {
 
     #[test]
     fn decrement_rank() {
-        let rank_pairs = [
+        let test_cases = [
             ("1", "01"),
             ("8", "7"),
             ("9", "8"),
@@ -253,7 +253,7 @@ mod increment {
             ("01001", "01"),
         ];
 
-        for (before, after) in rank_pairs {
+        for (before, after) in test_cases {
             println!("{} -> {}", before, after);
             let before_rank = LexValue::new(before).unwrap();
             let after_rank = LexValue::new(after).unwrap();
@@ -263,7 +263,7 @@ mod increment {
 
     #[test]
     fn increment_lexorank() {
-        let lexorank_pairs = [
+        let test_cases = [
             ("1|01", "1|02"),
             ("0|9", "0|a"),
             ("0|a", "0|b"),
@@ -278,7 +278,7 @@ mod increment {
             ("0|zzz", "0|zzz1"),
         ];
 
-        for (before, after) in lexorank_pairs {
+        for (before, after) in test_cases {
             println!("{} -> {}", before, after);
             let before_lexorank: LexoRank = before.try_into().unwrap();
             let after_lexorank: LexoRank = after.try_into().unwrap();
@@ -288,7 +288,7 @@ mod increment {
 
     #[test]
     fn decrement_lexorank() {
-        let lexorank_pairs = [
+        let test_cases = [
             ("1|1", "1|01"),
             ("0|8", "0|7"),
             ("2|9", "2|8"),
@@ -304,11 +304,104 @@ mod increment {
             ("2|01001", "2|01"),
         ];
 
-        for (before, after) in lexorank_pairs {
+        for (before, after) in test_cases {
             println!("{} -> {}", before, after);
             let before_lexorank: LexoRank = before.try_into().unwrap();
             let after_lexorank: LexoRank = after.try_into().unwrap();
             assert_eq!(before_lexorank.prev(), after_lexorank);
+        }
+    }
+}
+
+mod between {
+    use lexorank::{LexValue, LexoRank};
+
+    #[test]
+    fn between_ranks() {
+        let test_cases = [
+            ("1", "3", "2"),
+            ("1", "9", "2"),
+            ("a", "z", "b"),
+            ("1", "2", "11"),
+            ("a", "b", "a1"),
+            ("12", "1a", "13"),
+            ("101", "123", "102"),
+            ("11", "12", "111"),
+            ("az", "b", "az1"),
+            ("1a1", "1a11", "1a101"),
+            ("z4", "z41", "z401"),
+            ("z4", "z401", "z4001"),
+            ("z401", "z40100001", "z401000001"),
+        ];
+
+        for (rank1, rank2, between) in test_cases {
+            println!("{} -> {} <- {}", rank1, between, rank2);
+            let rank1 = LexValue::new(rank1).unwrap();
+            let rank2 = LexValue::new(rank2).unwrap();
+            let between = LexValue::new(between).unwrap();
+            assert_eq!(rank1.between(&rank2).unwrap(), between);
+            assert_eq!(rank2.between(&rank1).unwrap(), between);
+        }
+    }
+
+    #[test]
+    fn between_equal_ranks() {
+        let test_cases = ["1", "z", "1a1", "z4", "z401", "z40100001"];
+
+        for rank in test_cases {
+            println!("{} -> {} <- {}", rank, rank, rank);
+            let rank1 = LexValue::new(rank).unwrap();
+            let rank2 = LexValue::new(rank).unwrap();
+            assert_eq!(rank1.between(&rank2), None);
+            assert_eq!(rank2.between(&rank1), None);
+        }
+    }
+
+    #[test]
+    fn between_lexoranks() {
+        let test_cases = [
+            ("0|1", "0|3", "0|2"),
+            ("0|1", "0|9", "0|2"),
+            ("0|a", "0|z", "0|b"),
+            ("0|1", "0|2", "0|11"),
+            ("0|a", "0|b", "0|a1"),
+            ("0|12", "0|1a", "0|13"),
+            ("0|101", "0|123", "0|102"),
+            ("0|11", "0|12", "0|111"),
+            ("0|az", "0|b", "0|az1"),
+            ("0|1a1", "0|1a11", "0|1a101"),
+            ("0|z4", "0|z41", "0|z401"),
+            ("0|z4", "0|z401", "0|z4001"),
+            ("0|z401", "0|z40100001", "0|z401000001"),
+        ];
+
+        for (lexorank1, lexorank2, between) in test_cases {
+            println!("{} -> {} <- {}", lexorank1, between, lexorank2);
+            let lexorank1: LexoRank = lexorank1.try_into().unwrap();
+            let lexorank2: LexoRank = lexorank2.try_into().unwrap();
+            let between: LexoRank = between.try_into().unwrap();
+            assert_eq!(lexorank1.between(&lexorank2).unwrap(), between);
+            assert_eq!(lexorank2.between(&lexorank1).unwrap(), between);
+        }
+    }
+
+    #[test]
+    fn between_equal_lexoranks() {
+        let test_cases = [
+            ("0|1", "0|1"),
+            ("2|z", "2|z"),
+            ("0|1a1", "0|1a1"),
+            ("2|z4", "2|z4"),
+            ("0|z401", "0|z401"),
+            ("1|z40100001", "1|z40100001"),
+        ];
+
+        for (lexorank1, rank2) in test_cases {
+            println!("{} -> {} <- {}", lexorank1, lexorank1, rank2);
+            let rank1: LexoRank = lexorank1.try_into().unwrap();
+            let rank2: LexoRank = rank2.try_into().unwrap();
+            assert_eq!(rank1.between(&rank2), None);
+            assert_eq!(rank2.between(&rank1), None);
         }
     }
 }

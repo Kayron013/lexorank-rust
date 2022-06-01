@@ -1,5 +1,4 @@
 mod error;
-mod tests;
 
 use error::ParseError;
 use helpers::{decrement_char, increment_char};
@@ -129,6 +128,42 @@ impl LexValue {
         let new_value = "0".to_owned() + &self.0;
         return LexValue(new_value);
     }
+
+    pub fn between(&self, rank2: &Self) -> Option<Self> {
+        if self == rank2 {
+            return None;
+        }
+
+        let (lesser, greater) = if self < rank2 {
+            (self, rank2)
+        } else {
+            (rank2, self)
+        };
+
+        let incremented = lesser.next();
+        if incremented < *greater {
+            return Some(incremented);
+        }
+
+        let plus1 = lesser.append("1");
+        if plus1 < *greater {
+            return Some(plus1);
+        }
+
+        let mut pre = "0".to_owned();
+        let mut plus01 = lesser.append(&format!("{}1", pre));
+
+        while plus01 >= *greater {
+            pre.push('0');
+            plus01 = lesser.append(&format!("{}1", pre));
+        }
+
+        Some(plus01)
+    }
+
+    fn append(&self, value: &str) -> Self {
+        LexValue(self.0.to_owned() + value)
+    }
 }
 
 impl TryFrom<&str> for LexValue {
@@ -181,6 +216,12 @@ impl LexoRank {
 
     pub fn prev(&self) -> Self {
         LexoRank::new(self.bucket, self.rank.prev())
+    }
+
+    pub fn between(&self, rank2: &Self) -> Option<Self> {
+        self.rank
+            .between(&rank2.rank)
+            .map(|rank| LexoRank::new(self.bucket, rank))
     }
 }
 

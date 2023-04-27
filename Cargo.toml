@@ -6,7 +6,7 @@ keywords = ["rank", "jira"]
 license-file = "LICENSE"
 name = "lexorank"
 repository = "https://github.com/Kayron013/lexorank-rust"
-version = "0.1.0"
+version = "2.0.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

@@ -1,11 +1,16 @@
 [package]
-name = "lexorank"
-version = "0.1.0"
+authors = ["Angel Campbell"]
+description = "An immutable class implementation of the LexoRank ranking system by Atlassian JIRA"
 edition = "2021"
+keywords = ["rank", "jira"]
+license-file = "LICENSE"
+name = "lexorank"
+repository = "https://github.com/Kayron013/lexorank-rust"
+version = "0.1.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-regex = "1.5"
 lazy_static = "1.4"
+regex = "1.5"
 substring = "1.4"

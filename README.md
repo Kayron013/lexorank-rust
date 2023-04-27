@@ -7,6 +7,8 @@ A lightweight immutable class implementation of the [LexoRank ranking system](ht
 [![crate version](https://img.shields.io/crates/v/lexorank)](https://crates.io/crates/lexorank)
 [![license](https://img.shields.io/github/license/kayron013/lexorank-rust)](https://github.com/Kayron013/lexorank-rust/blob/master/LICENSE)
 
+## Features
+
 This library provides the following functionality with unbounded rank lengths:
 
 - Creating ranks
